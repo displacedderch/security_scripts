@@ -1,0 +1,30 @@
+import socket
+
+def port_scan(target, ports):
+    """Scans a target host for open ports."""
+
+    open_ports = []
+
+    for port in ports:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(2)  # Timeout after 2 seconds
+
+        result = sock.connect_ex((target, port))
+        if result == 0:
+            open_ports.append(port)
+        sock.close()
+
+    return open_ports
+
+if __name__ == "__main__":
+    target_host = input("Enter the target host (e.g., 127.0.0.1): ")
+    ports_to_scan = [22, 80, 443, 8080]  # Add more ports as needed
+
+    open_ports = port_scan(target_host, ports_to_scan)
+
+    if open_ports:
+        print("Open ports on {}:".format(target_host))
+        for port in open_ports:
+            print("Port {}: Open".format(port))
+    else:
+        print("No open ports found on {}.".format(target_host))
